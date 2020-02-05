@@ -1,4 +1,4 @@
-
+from .utils import load_scan, get_pixels_hu
 
 
 class Patient:
@@ -8,11 +8,8 @@ class Patient:
         slices = load_scan(path)
         self.image = get_pixels_hu(slices)
 
-    def horizontal_plot(self, z: int, hu_bounds:=(0, 60), hu_type: HU_Type=None):
-        if hu_range:
-            hu_bounds = hu_type_to_bounds[hu_range]
-        
-        raise NotImplementedError('')
+    def horizontal_plot(self, z: int):
+        pass
     
     def frontal_plot(self,):
         pass
