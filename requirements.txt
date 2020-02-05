@@ -1,0 +1,4 @@
+numpy
+pathlib
+pydicom
+matplotlib
