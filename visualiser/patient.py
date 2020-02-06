@@ -69,6 +69,6 @@ class Patient:
         ax.set_xticks([])
         ax.set_yticks([])
 
-        plt.imshow(img, cmap=plt.cm.bone)
+        plt.imshow(img, cmap=plt.cm.bone, vmin=-1024, vmax=500)
         ax.set_aspect(aspect)
         plt.plot()
