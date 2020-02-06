@@ -17,8 +17,6 @@ def get_pixels_hu(slices):
     image = np.stack([s.pixel_array for s in slices])
     image = image.astype(np.int16)
 
-    #     image[image == -2000] = 0
-
     for slice_number in range(len(slices)):
 
         intercept = slices[slice_number].RescaleIntercept
