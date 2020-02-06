@@ -43,25 +43,25 @@ class Patient:
             s.SliceThickness = str(new_spacing[0])
             s.PixelSpacing = [str(s) for s in new_spacing[1:]]
 
-    def horizontal_plot(self, z: int, vmin=50, vmax=350):
+    def horizontal_plot(self, z: int, vmin=-1024, vmax=500):
         img = self._image[z]
         z, y, x = self.spacing
         aspect = y / x
         self._single_plot(img, aspect=aspect, vmin=vmin, vmax=vmax)
 
-    def frontal_plot(self, y: int, vmin=50, vmax=350):
+    def frontal_plot(self, y: int, vmin=-1024, vmax=500):
         img = self._image[:, y, :].T
         z, y, x = self.spacing
         aspect = x / z
         self._single_plot(img, aspect=aspect, figsize=(20, 5), vmin=vmin, vmax=vmax)
 
-    def longitudinal_plot(self, x: int, vmin=50, vmax=350):
+    def longitudinal_plot(self, x: int, vmin=-1024, vmax=500):
         img = self._image[:, :, x].T
         z, y, x = self.spacing
         aspect = y / z
         self._single_plot(img, aspect=aspect, figsize=(20, 5), vmin=vmin, vmax=vmax)
 
-    def _single_plot(self, img, aspect=1.0, figsize=(10, 10), vmin=50, vmax=350):
+    def _single_plot(self, img, aspect=1.0, figsize=(10, 10), vmin=-1024, vmax=500):
         fig, ax = plt.subplots(1, 1, figsize=figsize)
         ax.set_xticks([])
         ax.set_yticks([])
