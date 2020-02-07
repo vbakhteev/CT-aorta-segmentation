@@ -4,3 +4,4 @@ pathlib
 pydicom
 matplotlib
 ipywidgets==7.5.0
+opencv-python

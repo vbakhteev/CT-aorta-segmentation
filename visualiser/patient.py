@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 import scipy.ndimage
 import matplotlib.pyplot as plt
@@ -37,7 +38,7 @@ class Patient:
         real_resize_factor = new_shape / self.shape
         new_spacing = self.spacing / real_resize_factor
 
-        self._image = scipy.ndimage.interpolation.zoom(self._image, real_resize_factor)
+        self._image = scipy.ndimage.interpolation.zoom(self._image, real_resize_factor, order=1)
 
         for s in self._slices:
             s.SliceThickness = str(new_spacing[0])
