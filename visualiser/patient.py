@@ -53,13 +53,13 @@ class Patient:
         img = self._image[:, y, :].T
         z, y, x = self.spacing
         aspect = x / z
-        self._single_plot(img, aspect=aspect, figsize=(20, 5), vmin=vmin, vmax=vmax)
+        self._single_plot(img, aspect='auto', figsize=(20, 5), vmin=vmin, vmax=vmax)
 
     def longitudinal_plot(self, x: int, vmin=-1024, vmax=500):
         img = self._image[:, :, x].T
         z, y, x = self.spacing
         aspect = y / z
-        self._single_plot(img, aspect=aspect, figsize=(20, 5), vmin=vmin, vmax=vmax)
+        self._single_plot(img, aspect='auto', figsize=(20, 5), vmin=vmin, vmax=vmax)
 
     def _single_plot(self, img, aspect=1.0, figsize=(10, 10), vmin=-1024, vmax=500):
         fig, ax = plt.subplots(1, 1, figsize=figsize)
