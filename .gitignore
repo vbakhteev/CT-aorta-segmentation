@@ -3,3 +3,4 @@
 __pycache__/
 
 data/*
+!data/I1450.png.json
