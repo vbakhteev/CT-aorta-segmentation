@@ -2,7 +2,7 @@ import numpy as np
 import scipy.ndimage
 import matplotlib.pyplot as plt
 
-from .utils import load_scan, get_pixels_hu
+from .utils import load_scan, get_pixels_hu, make_mesh, plotly_3d
 
 
 class Patient:
@@ -60,6 +60,10 @@ class Patient:
         z, y, x = self.spacing
         aspect = y / z
         self._single_plot(img, aspect='auto', figsize=(20, 5), vmin=vmin, vmax=vmax)
+
+    def plot_3d(self, threshold=300):
+        v, f = make_mesh(self._image, threshold, 5)
+        plotly_3d(v, f)
 
     def _single_plot(self, img, aspect=1.0, figsize=(10, 10), vmin=-1024, vmax=500):
         fig, ax = plt.subplots(1, 1, figsize=figsize)
