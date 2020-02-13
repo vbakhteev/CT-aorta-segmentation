@@ -54,19 +54,20 @@ class Patient:
         img = self._image[:, y, :].T
         z, y, x = self.spacing
         aspect = x / z
-        self._single_plot(img, aspect='auto', figsize=(20, 5), vmin=vmin, vmax=vmax)
+        self._single_plot(img, aspect='auto', figsize=(0.01 * img.shape[1], 0.01 * img.shape[0]), vmin=vmin, vmax=vmax)
 
     def longitudinal_plot(self, x: int, vmin=-1024, vmax=500):
         img = self._image[:, :, x].T
         z, y, x = self.spacing
         aspect = y / z
-        self._single_plot(img, aspect='auto', figsize=(20, 5), vmin=vmin, vmax=vmax)
+        self._single_plot(img, aspect='auto', figsize=(0.01 * img.shape[1], 0.01 * img.shape[0]), vmin=vmin, vmax=vmax)
 
     def plot_3d(self, threshold=300):
         v, f = make_mesh(self._image, threshold, 5)
         plotly_3d(v, f)
 
-    def _single_plot(self, img, aspect=1.0, figsize=(10, 10), vmin=-1024, vmax=500):
+    def _single_plot(self, img, aspect=1.0, figsize=None, vmin=-1024, vmax=500):
+        figsize = (0.01 * img.shape[1], 0.01 * img.shape[0]) if figsize is None else figsize
         fig, ax = plt.subplots(1, 1, figsize=figsize)
         ax.set_xticks([])
         ax.set_yticks([])
@@ -116,3 +117,10 @@ class Patient:
             mask_img.append(self.aorta_mask_slice_cv(i))
         mask_img = np.array(mask_img)
         return mask_img
+
+    def plot_cutted_by_longitude(self, x, left, right, vmin=-1024, vmax=500):
+        img = self._image[:, :, x].T[:, left:right]
+        self._single_plot(img, aspect='auto', figsize=(0.01 * img.shape[1], 0.01 * img.shape[0]), vmin=vmin, vmax=vmax)
+
+    def cut_by_longitude(self, left, right, vmin=-1024, vmax=500):
+        self._image = self._image[left:right, :, :]
