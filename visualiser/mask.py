@@ -5,8 +5,8 @@ import json
 import numpy as np
 
 
-class SliceMaskPoints:
-    """Represents contours of mask in one slice
+class SliceMask:
+    """Represents mask of one horizontal/vartical slice
     """
     def __init__(self, contours: List[np.array], size: Tuple[int, int]):
         """contours - list of mask's contours
@@ -36,9 +36,19 @@ class SliceMaskPoints:
         return cls(contours, size)
 
     @property
-    def mask(self):
+    def contour_mask(self):
         mask = np.zeros(self.size, dtype=np.uint8)
         mask = cv2.drawContours(mask, self.contours, -1, (255), 1)
+        return mask
+
+    @contour_mask.setter
+    def contour_mask(self, mask):
+        self.contours, self.size = mask_to_points(mask)
+
+    @property
+    def mask(self):
+        mask = np.zeros(self.size, dtype=np.uint8)
+        mask = cv2.fillPoly(mask, pts=self.contours, color=(1,))
         return mask
 
     @mask.setter
@@ -52,9 +62,3 @@ def mask_to_points(mask):
     size = tuple(mask.shape)
 
     return contours, size
-
-
-class SliceMask:
-    """Mask of one slice
-    """
-    pass

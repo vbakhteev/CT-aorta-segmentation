@@ -1,3 +1,3 @@
 from .patient import Patient
-from .mask import SliceMaskPoints
+from .mask import SliceMask
 from .utils import *
