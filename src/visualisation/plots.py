@@ -1,10 +1,11 @@
+import numpy as np
 import matplotlib.pyplot as plt
 from skimage import measure
 from plotly.offline import iplot
 from plotly import figure_factory as FF
 
 
-def single_2d_plot(img, aspect=1.0, figsize=None, vmin=-1024, vmax=500):
+def single_2d_plot(img, mask=None, aspect=1.0, figsize=None, vmin=-1024, vmax=500):
     if figsize is None:
         figsize = (0.01 * img.shape[1], 0.01 * img.shape[0])
     fig, ax = plt.subplots(1, 1, figsize=figsize)
@@ -13,6 +14,11 @@ def single_2d_plot(img, aspect=1.0, figsize=None, vmin=-1024, vmax=500):
 
     plt.imshow(img, cmap=plt.cm.bone, vmin=vmin, vmax=vmax)
     ax.set_aspect(aspect)
+
+    if mask is not None:
+        mask = np.ma.masked_where(mask == 0, mask)
+        plt.imshow(mask, alpha=0.4, cmap='viridis')
+        
     plt.plot()
 
 

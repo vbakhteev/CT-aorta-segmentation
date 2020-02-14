@@ -6,17 +6,17 @@ from ..utils import load_scan, get_pixels_hu
 
 
 class Patient:
-    """Class for 3D CT image of human and his visualisation
+    """Class for storing 3D CT snapshot and mask of patient 
     """
 
-    def __init__(self, path: str):
+    def __init__(self, path: str, snapshot_mask=None):
         slices = load_scan(path)
         slice_thickness = float(slices[0].SliceThickness)
         xy_spacing = [float(ps) for ps in slices[0].PixelSpacing]
 
         self.spacing = np.array([slice_thickness] + xy_spacing)
-        print(self.spacing)
         self.snapshot = get_pixels_hu(slices)
+        self.snapshot_mask = snapshot_mask
     
 
     @property
@@ -24,6 +24,16 @@ class Patient:
         """Returns a shape of Patient's snapshot
         """
         return self.snapshot.shape
+
+
+    @property
+    def snapshot_mask(self):
+        return self._snapshot_mask
+
+    @snapshot_mask.setter
+    def snapshot_mask(self, snapshot_mask):
+        assert (snapshot_mask is None) or (snapshot_mask.ndim == 3 and snapshot_mask.shape == self.snapshot.shape)
+        self._snapshot_mask = snapshot_mask
 
 
     def resample(self, new_spacing=[1, 1, 1]):
