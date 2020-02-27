@@ -39,13 +39,11 @@ def make_mesh(image, threshold=-300, step_size=1):
     return verts, faces
 
 
-def plotly_3d(verts, faces):
+def plotly_3d(verts, faces, aspectratio=dict(x=1, y=1, z=1)):
     x, y, z = zip(*verts)
 
     colormap = ['rgb(236, 236, 212)', 'rgb(236, 236, 212)']
-    aspectratio = dict(
-        x=1, y=1, z=3,
-    )
+    
 
     fig = FF.create_trisurf(
         x=x, y=y, z=z,
