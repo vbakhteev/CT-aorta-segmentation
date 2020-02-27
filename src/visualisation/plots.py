@@ -7,7 +7,7 @@ from plotly import figure_factory as FF
 
 def single_2d_plot(img, mask=None, aspect=1.0, figsize=None, vmin=-1024, vmax=500):
     if figsize is None:
-        figsize = (0.01 * img.shape[1], 0.01 * img.shape[0])
+        figsize = (0.015 * img.shape[1], 0.015 * img.shape[0])
     fig, ax = plt.subplots(1, 1, figsize=figsize)
     ax.set_xticks([])
     ax.set_yticks([])
