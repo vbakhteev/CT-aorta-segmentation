@@ -8,11 +8,15 @@ import numpy as np
 
 def load_scan(path, filter_slices=False):
     path = Path(path)
-    slices = [pydicom.read_file(str(s)) for s in path.iterdir()]
+    slices = [load_slice(s) for s in path.iterdir()]
     if filter_slices:
         slices = filter_bad_slices(slices)
     slices.sort(key=lambda x: float(x.ImagePositionPatient[2]))
     return slices
+
+
+def load_slice(path):
+    return pydicom.read_file(str(path))
 
 
 def get_pixels_hu(slices):
@@ -89,3 +93,10 @@ def are_legs(img, threshold=-100, min_area=500):
                 num_objects += 1
 
     return num_objects == 2
+
+
+def get_spacing(slice):
+    slice_thickness = float(slice.SliceThickness)
+    xy_spacing = [float(ps) for ps in slice.PixelSpacing]
+    spacing = np.array([slice_thickness] + xy_spacing)
+    return spacing
