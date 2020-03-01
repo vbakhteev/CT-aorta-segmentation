@@ -13,7 +13,7 @@ class PatientSnapshot(Patient):
 
     def horizontal_plot(self, z: int, vmin=-1024, vmax=500, plot_mask=True):
         img = self.snapshot[z]
-        mask = self.snapshot_mask[z] if (plot_mask and self.snapshot_mask is not None) else None
+        mask = self.mask[z] if (plot_mask and self.mask is not None) else None
 
         z, y, x = self.spacing
         aspect = y / x
@@ -22,7 +22,7 @@ class PatientSnapshot(Patient):
 
     def frontal_plot(self, y: int, vmin=-1024, vmax=500, plot_mask=False):
         img = self.snapshot[:, y, :].T
-        mask = self.snapshot_mask[:, y, :].T if (plot_mask and self.snapshot_mask is not None) else None
+        mask = self.mask[:, y, :].T if (plot_mask and self.mask is not None) else None
 
         z, y, x = self.spacing
         aspect = x / z
@@ -31,7 +31,7 @@ class PatientSnapshot(Patient):
 
     def longitudinal_plot(self, x: int, vmin=-1024, vmax=500, plot_mask=False):
         img = self.snapshot[:, :, x].T
-        mask = self.snapshot_mask[:, :, x].T if (plot_mask and self.snapshot_mask is not None) else None
+        mask = self.mask[:, :, x].T if (plot_mask and self.mask is not None) else None
 
         z, y, x = self.spacing
         aspect = y / z
