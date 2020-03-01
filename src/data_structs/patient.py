@@ -9,6 +9,7 @@ import scipy.ndimage
 
 from ..utils import load_scan, get_pixels_hu, get_spacing, load_slice
 
+TORCHIO_INTERCEPT = -1024
 
 class Patient:
     """Class for storing 3D CT snapshot and mask of patient 
@@ -36,9 +37,9 @@ class Patient:
 
     @classmethod
     def from_torchio(cls, sample):
-        snapshot = sample['snapshot']['data'][0].numpy().transpose()
+        snapshot = sample['snapshot']['data'][0].numpy().transpose() + TORCHIO_INTERCEPT
         slice_path = next(Path(sample['snapshot']['path']).iterdir())
-        spacing = get_spacing(load_slice(slice_path))
+        spacing = get_spacing(load_slice(slice_path))   # TODO load spacing from affine matrix
         mask = sample.get('mask', None)
         if mask is not None:
             mask = mask['data'][0].numpy().transpose()
@@ -101,10 +102,11 @@ class Image(torchio.Image):
         : str:`(1, D_{in}, H_{in}, W_{in})`
             and a 2D 4x4 affine matrix
         """
+        scan = load_scan(self.path)
         tensor = torch.from_numpy(
-            get_pixels_hu(load_scan(self.path)).transpose()
+            get_pixels_hu(scan).transpose() - TORCHIO_INTERCEPT
         )
-        affine = np.zeros((4, 4)) # TODO change affine to appropriate values
+        affine = np.eye(4) # TODO change affine to appropriate values
         tensor = tensor.unsqueeze(0)  # add channels dimension
         if check_nans and torch.isnan(tensor).any():
             warnings.warn(f'NaNs found in file "{self.path}"')
