@@ -9,7 +9,6 @@ import scipy.ndimage
 
 from ..utils import load_scan, get_pixels_hu, get_spacing, load_slice
 
-TORCHIO_INTERCEPT = -1024
 
 class Patient:
     """Class for storing 3D CT snapshot and mask of patient 
@@ -28,6 +27,8 @@ class Patient:
 
     @classmethod
     def from_path(cls, path: str, mask=None):
+        """Loads DICOM file by given directory path
+        """
         slices = load_scan(path)
         spacing = get_spacing(slices[0])
         snapshot = get_pixels_hu(slices)
@@ -37,9 +38,11 @@ class Patient:
 
     @classmethod
     def from_torchio(cls, sample):
-        snapshot = sample['snapshot']['data'][0].numpy().transpose() + TORCHIO_INTERCEPT
+        """Creates Patient object from torchio subject instance
+        """
+        snapshot = sample['snapshot']['data'][0].numpy().transpose()
         slice_path = next(Path(sample['snapshot']['path']).iterdir())
-        spacing = get_spacing(load_slice(slice_path))   # TODO load spacing from affine matrix
+        spacing = get_spacing(load_slice(slice_path))
         mask = sample.get('mask', None)
         if mask is not None:
             mask = mask['data'][0].numpy().transpose()
@@ -74,40 +77,3 @@ class Patient:
 
         self.spacing = self.spacing / real_resize_factor
         self.snapshot = scipy.ndimage.interpolation.zoom(self.snapshot, real_resize_factor, order=1)
-
-
-class Image(torchio.Image):
-    r"""Class to store information about an image.
-    """
-    def __init__(self, name: str, path: str, type_: str):
-        self.name = name
-        self.path = self._parse_path(path)
-        self.type = type_
-
-    def _parse_path(self, path) -> Path:
-        try:
-            path = Path(path).expanduser()
-        except TypeError:
-            message = f'Conversion to path not possible for variable: {path}'
-            raise TypeError(message)
-        return path
-
-    def load(self, check_nans: bool = True):
-        r"""Load the image from disk.
-        Args:
-            check_nans: If ``True``, issues a warning if NaNs are found
-                in the image
-        Returns:
-            Tuple containing a 4D data tensor of size
-        : str:`(1, D_{in}, H_{in}, W_{in})`
-            and a 2D 4x4 affine matrix
-        """
-        scan = load_scan(self.path)
-        tensor = torch.from_numpy(
-            get_pixels_hu(scan).transpose() - TORCHIO_INTERCEPT
-        )
-        affine = np.eye(4) # TODO change affine to appropriate values
-        tensor = tensor.unsqueeze(0)  # add channels dimension
-        if check_nans and torch.isnan(tensor).any():
-            warnings.warn(f'NaNs found in file "{self.path}"')
-        return tensor, affine
