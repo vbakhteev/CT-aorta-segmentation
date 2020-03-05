@@ -1,5 +1,6 @@
 import warnings
 from pathlib import Path
+from typing import Union
 
 import cv2
 import torch
@@ -14,7 +15,7 @@ class Patient:
     """Class for storing 3D CT snapshot and mask of patient 
     """
 
-    def __init__(self, snapshot, spacing=(1, 1, 1), mask=None):
+    def __init__(self, snapshot: np.array, spacing: tuple = (1, 1, 1), mask: np.array = None):
         """
         snapshot: np.array(z, y, x) - 3D image of patient
         spacing: tuple with voxel spacing
@@ -26,18 +27,20 @@ class Patient:
 
 
     @classmethod
-    def from_path(cls, path: str, mask=None):
+    def from_path(cls, path: Union[str, Path], mask_path: Union[str, Path] = None):
         """Loads DICOM file by given directory path
         """
         slices = load_scan(path)
         spacing = get_spacing(slices[0])
         snapshot = get_pixels_hu(slices)
 
+        mask = None                 # TODO load mask from given_path
+
         return cls(snapshot, spacing=spacing, mask=mask)
 
 
     @classmethod
-    def from_torchio(cls, sample):
+    def from_torchio(cls, sample: dict):
         """Creates Patient object from torchio subject instance
         """
         snapshot = sample['snapshot']['data'][0].numpy().transpose()
@@ -62,9 +65,15 @@ class Patient:
         return self._mask
 
     @mask.setter
-    def mask(self, mask):
+    def mask(self, mask: np.array):
         assert (mask is None) or (mask.ndim == 3 and mask.shape == self.snapshot.shape)
         self._mask = mask
+
+    def __getitem__(self, key):
+        return self.snapshot[key]
+
+    def __setitem__(self, key, value):
+        self.snapshot[key] = value
 
 
     def resample(self, new_spacing=[1, 1, 1]):
