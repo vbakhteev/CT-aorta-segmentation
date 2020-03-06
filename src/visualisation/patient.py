@@ -19,15 +19,14 @@ class PatientSnapshot(Patient):
         aspect = y / x
         single_2d_plot(img, mask, aspect=aspect, vmin=vmin, vmax=vmax)
 
-
     def frontal_plot(self, y: int, vmin=-1024, vmax=500, plot_mask=False):
         img = self.snapshot[:, y, :].T
         mask = self.mask[:, y, :].T if (plot_mask and self.mask is not None) else None
 
         z, y, x = self.spacing
         aspect = x / z
-        single_2d_plot(img, mask, aspect='auto', figsize=(0.01 * img.shape[1], 0.01 * img.shape[0]), vmin=vmin, vmax=vmax)
-
+        single_2d_plot(img, mask, aspect='auto', figsize=(0.01 * img.shape[1], 0.01 * img.shape[0]), vmin=vmin,
+                       vmax=vmax)
 
     def longitudinal_plot(self, x: int, vmin=-1024, vmax=500, plot_mask=False):
         img = self.snapshot[:, :, x].T
@@ -35,13 +34,12 @@ class PatientSnapshot(Patient):
 
         z, y, x = self.spacing
         aspect = y / z
-        single_2d_plot(img, mask, aspect='auto', figsize=(0.01 * img.shape[1], 0.01 * img.shape[0]), vmin=vmin, vmax=vmax)
-
+        single_2d_plot(img, mask, aspect='auto', figsize=(0.01 * img.shape[1], 0.01 * img.shape[0]), vmin=vmin,
+                       vmax=vmax)
 
     def plot_3d(self, threshold=300, aspectratio=dict(x=1, y=1, z=1)):
         v, f = make_mesh(self.snapshot, threshold, 5)
         plotly_3d(v, f, aspectratio=aspectratio)
-
 
     def plot_cutted_by_longitude(self, x, left, right, vmin=-1024, vmax=500):
         img = self.snapshot[:, :, x].T[:, left:right]
