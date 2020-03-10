@@ -1,0 +1,36 @@
+train:
+  n_gpu: 0
+  batch_size: 16
+  num_workers: 32
+  num_epochs: 50
+
+
+model:
+  name: 'unet'
+  dims: 2
+  params:
+    encoder_name: 'resnet18'
+    encoder_depth: 5
+    encoder_weights: 'imagenet'
+    decoder_use_batchnorm: true
+    in_channels: 1
+    classes: 1
+
+
+scheduler:
+  name: 'reduce_lr_on_plateau'
+  params:
+    factor: 0.1
+    patience: 10
+
+
+optimizer:
+  name: 'adam'
+  params:
+    lr: 0.001
+
+
+criterion:
+  name: 'dice'
+  params:
+    mode: 'binary'
