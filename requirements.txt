@@ -1,3 +1,5 @@
+easydict
+PyYAML
 pytest
 scipy
 numpy
