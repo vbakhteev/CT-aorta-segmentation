@@ -5,3 +5,4 @@ __pycache__/
 lightning_logs/
 data/*
 !data/I1450.png.json
+temp/

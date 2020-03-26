@@ -18,7 +18,7 @@ def single_2d_plot(img, mask=None, aspect=1.0, figsize=None, vmin=-1024, vmax=50
     if mask is not None:
         mask = np.ma.masked_where(mask == 0, mask)
         plt.imshow(mask, alpha=0.4, cmap='viridis')
-        
+
     plt.plot()
 
 
@@ -39,16 +39,21 @@ def make_mesh(image, threshold=-300, step_size=1):
     return verts, faces
 
 
-def plotly_3d(verts, faces, aspectratio=dict(x=1, y=1, z=1)):
+def plotly_3d(verts, faces, mask, aspectratio=dict(x=1, y=1, z=1)):
+    # plot using trisurf
     x, y, z = zip(*verts)
 
-    colormap = ['rgb(236, 236, 212)', 'rgb(236, 236, 212)']
-    
+    colormap = ['rgb(236, 236, 212)', (1, 0.65, 0.12)]
+
+    def mask_code(x, y, z):
+        x, y, z = int(x), int(y), int(z)
+        return mask[z, y, x]
 
     fig = FF.create_trisurf(
         x=x, y=y, z=z,
+        color_func=mask_code if mask is not None else None,
         plot_edges=False,
-        show_colorbar=False,
+        show_colorbar=True,
         aspectratio=aspectratio,
         colormap=colormap,
         simplices=faces,

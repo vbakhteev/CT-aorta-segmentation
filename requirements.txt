@@ -11,3 +11,4 @@ torch
 torchio
 morphsnakes
 SimpleITK
+itkwidgets
