@@ -15,7 +15,7 @@ def morph_snakes_segmentation(snapshot,
     """
     # assert snapshot.ndim == 3
 
-    img = snapshot
+    img = snapshot[z]
     # get the gaussian gradient for higher contrast
     gimg = ms.inverse_gaussian_gradient(img, alpha=5.0, sigma=5.0)
 
