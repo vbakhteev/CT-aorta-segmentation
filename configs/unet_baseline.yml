@@ -1,27 +1,31 @@
+data:
+  path: '/home/vladbakhteev/data/aorta'
+  repeat_dataset: 2000
+  width: 320
+
 train:
-  n_gpu: 0
-  batch_size: 16
+  n_gpu: 1
+  batch_size: 32
   num_workers: 32
   num_epochs: 50
 
 
 model:
-  name: 'unet'
+  name: 'linknet'
   dims: 2
   params:
-    encoder_name: 'resnet18'
+    encoder_name: 'efficientnet-b0'
     encoder_depth: 5
     encoder_weights: 'imagenet'
-    decoder_use_batchnorm: true
-    in_channels: 1
+    in_channels: 3
     classes: 1
 
 
 scheduler:
-  name: 'reduce_lr_on_plateau'
+  name: 'cosine_restarts'
   params:
-    factor: 0.1
-    patience: 10
+    T_0: 2
+    T_mult: 2
 
 
 optimizer:
@@ -31,6 +35,18 @@ optimizer:
 
 
 criterion:
-  name: 'dice'
+  name: 'joint'
   params:
-    mode: 'binary'
+
+    first:
+      name: 'dice'
+      weight: 2
+      params:
+        mode: 'binary'
+
+    second:
+      name: 'focal'
+      weight: 1
+      params:
+        alpha: 0.05
+        gamma: 2
