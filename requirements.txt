@@ -11,3 +11,5 @@ torch
 torchio
 morphsnakes
 itkwidgets
+sympy
+vg
