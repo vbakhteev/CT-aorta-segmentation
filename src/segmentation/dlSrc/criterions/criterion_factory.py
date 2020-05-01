@@ -35,12 +35,12 @@ def get_criterion(config):
         return f(**config.criterion.params)
 
     else:
-        f1 = globals().get(config.criterion.first)
-        f2 = globals().get(config.criterion.second)
-        criterion1 = f1(**config.criterion.first.params)
-        criterion2 = f2(**config.criterion.second.params)
+        f1 = globals().get(config.criterion.params.first.name)
+        f2 = globals().get(config.criterion.params.second.name)
+        criterion1 = f1(**config.criterion.params.first.params)
+        criterion2 = f2(**config.criterion.params.second.params)
         return joint(
             criterion1, criterion2,
-            config.criterion.params.w1,
-            config.criterion.params.w2,
+            config.criterion.params.first.weight,
+            config.criterion.params.second.weight,
         )

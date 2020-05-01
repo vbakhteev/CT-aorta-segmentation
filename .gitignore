@@ -2,6 +2,7 @@
 !/.gitignore
 __pycache__/
 
+weights/
 lightning_logs/
 data/*
 !data/I1450.png.json
